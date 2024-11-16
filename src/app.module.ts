@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import dbConfig from './config/db.config';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
+import { StockApiModule } from './stock-api/stock-api.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     }),
     TypeOrmModule.forRootAsync({ useFactory: dbConfig }),
     ScheduleModule.forRoot(),
+    StockApiModule,
   ],
   controllers: [AppController],
   providers: [AppService],
