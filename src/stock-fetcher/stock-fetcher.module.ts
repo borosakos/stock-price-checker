@@ -5,9 +5,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Observed } from '../entities/observed.entity';
 import { HttpModule } from '@nestjs/axios';
 import { StockApiModule } from 'src/stock-api/stock-api.module';
+import { StockPrice } from 'src/entities/stock-price.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Observed]), HttpModule, StockApiModule],
+  imports: [
+    TypeOrmModule.forFeature([Observed, StockPrice]),
+    HttpModule,
+    StockApiModule,
+  ],
   providers: [StockFetcherService],
   controllers: [StockFetcherController],
 })

@@ -2,6 +2,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Observed } from 'src/entities/observed.entity';
+import { StockPrice } from 'src/entities/stock-price.entity';
 import StockApi from 'src/stock-api/stock-api.service';
 import { Repository } from 'typeorm';
 
@@ -13,6 +14,8 @@ export class StockFetcherService {
   constructor(
     @InjectRepository(Observed)
     private readonly observedRepository: Repository<Observed>,
+    @InjectRepository(StockPrice)
+    private readonly stockPriceRepository: Repository<StockPrice>,
     @Inject('FinnhubStockApiService')
     private readonly apiFetcherService: StockApi,
   ) {}
@@ -43,5 +46,6 @@ export class StockFetcherService {
     }
 
     this.logger.debug(`Fetched stock price:`, stockPriceDto);
+    await this.stockPriceRepository.save(stockPriceDto);
   }
 }
