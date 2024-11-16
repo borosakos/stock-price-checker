@@ -8,7 +8,7 @@ export class StockApiFetcherController {
   ) {}
 
   @Put(':symbol')
-  save(@Param('symbol') symbol: string) {
-    this.stockApiFetcherService.save(symbol);
+  async save(@Param('symbol') symbol: string): Promise<void> {
+    return this.stockApiFetcherService.save(symbol);
   }
 }
