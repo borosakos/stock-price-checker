@@ -35,9 +35,9 @@ export class FinnhubStockApiService implements StockApi {
           data: err.response.data,
           status: err.response.status,
         });
-      } else {
-        this.logger.error('Error in request', err.message);
+        return;
       }
+      this.logger.error('Error in request', err.message);
     }
   }
 }
