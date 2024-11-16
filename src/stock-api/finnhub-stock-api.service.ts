@@ -1,11 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { StockApi, StockPrice } from './stock-api.service';
-
-interface FinnhubQuoteResponseV1 {
-  c: number; // current price
-  t: number; // current timestamp
-}
+import StockApi from './stock-api.service';
+import FinnhubQuoteResponseV1 from './dto/FinnhubQuoteResponseV1Dto';
+import StockPriceDto from './dto/stockPriceDto';
 
 @Injectable()
 export class FinnhubStockApiService implements StockApi {
@@ -13,7 +10,7 @@ export class FinnhubStockApiService implements StockApi {
 
   constructor(private readonly httpService: HttpService) {}
 
-  async fetchStockPrice(symbol: string): Promise<StockPrice> {
+  async fetchStockPrice(symbol: string): Promise<StockPriceDto> {
     try {
       const { data } =
         await this.httpService.axiosRef.get<FinnhubQuoteResponseV1>(

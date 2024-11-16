@@ -1,8 +1,5 @@
-export interface StockPrice {
-  price: number;
-  timestamp: Date;
-}
+import StockPriceDto from './dto/stockPriceDto';
 
-export interface StockApi {
-  fetchStockPrice(symbol: string): Promise<StockPrice>;
+export default interface StockApi {
+  fetchStockPrice(symbol: string): Promise<StockPriceDto>;
 }

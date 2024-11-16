@@ -2,7 +2,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Observed } from 'src/entities/observed.entity';
-import { StockApi } from 'src/stock-api/stock-api.service';
+import StockApi from 'src/stock-api/stock-api.service';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -35,13 +35,13 @@ export class StockFetcherService {
       return;
     }
 
-    const stockPrice = await this.apiFetcherService.fetchStockPrice(
+    const stockPriceDto = await this.apiFetcherService.fetchStockPrice(
       observedSymbol.symbol,
     );
-    if (!stockPrice) {
+    if (!stockPriceDto) {
       return;
     }
 
-    this.logger.log(`Fetched stock price:`, stockPrice);
+    this.logger.debug(`Fetched stock price:`, stockPriceDto);
   }
 }
