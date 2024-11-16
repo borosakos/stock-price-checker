@@ -6,6 +6,8 @@ import StockPriceDto from './dto/stockPriceDto';
 
 @Injectable()
 export class FinnhubStockApiService implements StockApi {
+  public static readonly source = 'FINNHUB';
+
   private readonly logger: Logger = new Logger(FinnhubStockApiService.name);
 
   constructor(private readonly httpService: HttpService) {}
@@ -23,6 +25,8 @@ export class FinnhubStockApiService implements StockApi {
         );
       return {
         price: data.c,
+        source: FinnhubStockApiService.source,
+        symbol: symbol,
         timestamp: new Date(data.t * 1000),
       };
     } catch (err) {

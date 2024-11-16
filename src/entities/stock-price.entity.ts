@@ -10,6 +10,12 @@ export class StockPrice {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column()
+  symbol: string;
+
+  @Column()
+  source: string;
+
   @Column('numeric', {
     precision: 10,
     scale: 4,
