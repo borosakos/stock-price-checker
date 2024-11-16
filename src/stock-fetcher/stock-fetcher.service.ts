@@ -16,8 +16,8 @@ interface StockPrice {
 }
 
 @Injectable()
-export class StockApiFetcherService {
-  private readonly logger = new Logger(StockApiFetcherService.name);
+export class StockFetcherService {
+  private readonly logger = new Logger(StockFetcherService.name);
   private readonly observedId = 1;
 
   constructor(
