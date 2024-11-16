@@ -5,6 +5,7 @@ import { StockApiFetcherModule } from './stock-api-fetcher/stock-api-fetcher.mod
 import { TypeOrmModule } from '@nestjs/typeorm';
 import dbConfig from './config/db.config';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ConfigModule } from '@nestjs/config';
       load: [dbConfig],
     }),
     TypeOrmModule.forRootAsync({ useFactory: dbConfig }),
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],
