@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+export interface StockPrice {
+  price: number;
+  timestamp: Date;
+}
 
-@Injectable()
-export class StockApiService {}
+export interface StockApi {
+  fetchStockPrice(symbol: string): Promise<StockPrice>;
+}

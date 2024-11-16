@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { StockApiService } from './stock-api.service';
+import { FinnhubStockApiService } from './finnhub-stock-api.service';
 
-describe('StockApiService', () => {
-  let service: StockApiService;
+describe('FinnhubStockApiService', () => {
+  let service: FinnhubStockApiService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [StockApiService],
+      providers: [FinnhubStockApiService],
     }).compile();
 
-    service = module.get<StockApiService>(StockApiService);
+    service = module.get<FinnhubStockApiService>(FinnhubStockApiService);
   });
 
   it('should be defined', () => {

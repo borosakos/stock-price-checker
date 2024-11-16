@@ -1,19 +1,9 @@
-import { HttpService } from '@nestjs/axios';
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Observed } from 'src/entities/observed.entity';
+import { StockApi } from 'src/stock-api/stock-api.service';
 import { Repository } from 'typeorm';
-
-interface FinnhubQuoteResponseV1 {
-  c: number; // current price
-  t: number; // current timestamp
-}
-
-interface StockPrice {
-  price: number;
-  timestamp: Date;
-}
 
 @Injectable()
 export class StockFetcherService {
@@ -23,7 +13,8 @@ export class StockFetcherService {
   constructor(
     @InjectRepository(Observed)
     private readonly observedRepository: Repository<Observed>,
-    private readonly httpService: HttpService,
+    @Inject('FinnhubStockApiService')
+    private readonly apiFetcherService: StockApi,
   ) {}
 
   async save(symbol: string): Promise<void> {
@@ -44,38 +35,13 @@ export class StockFetcherService {
       return;
     }
 
-    const stockPrice = await this.fetchStockPrice(observedSymbol.symbol);
+    const stockPrice = await this.apiFetcherService.fetchStockPrice(
+      observedSymbol.symbol,
+    );
     if (!stockPrice) {
       return;
     }
 
     this.logger.log(`Fetched stock price:`, stockPrice);
-  }
-
-  async fetchStockPrice(symbol: string): Promise<StockPrice> {
-    try {
-      const { data } =
-        await this.httpService.axiosRef.get<FinnhubQuoteResponseV1>(
-          `https://finnhub.io/api/v1/quote?symbol=${symbol}`,
-          {
-            headers: {
-              'X-Finnhub-Token': process.env.STOCK_API_KEY,
-            },
-          },
-        );
-      return {
-        price: data.c,
-        timestamp: new Date(data.t * 1000),
-      };
-    } catch (err) {
-      if (err.response) {
-        this.logger.error('Error from API call', {
-          data: err.response.data,
-          status: err.response.status,
-        });
-      } else {
-        this.logger.error('Error in request', err.message);
-      }
-    }
   }
 }
