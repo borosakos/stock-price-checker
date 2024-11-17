@@ -22,24 +22,39 @@ export class PriceCheckerService {
       take: windowSize,
     });
 
+    const [currStockPrice] = stockPrices;
+
+    if (!currStockPrice) {
+      return {
+        message: 'There is no available price for this symbol!',
+      };
+    }
+
+    const partialResult = {
+      result: {
+        price: currStockPrice.price,
+        timestamp: currStockPrice.timestamp,
+        windowSize,
+      },
+    };
+
     if (stockPrices.length < windowSize) {
-      console.log(
-        `The number of historical records is not sufficient for calculation yet!`,
-      );
-      return; // TODO: Add exception
+      return {
+        ...partialResult,
+        message:
+          'The number of historical records is not sufficient for moving average calculation yet!',
+      };
     }
 
     const sumOfPrices = stockPrices
       .map((sp) => sp.price)
       .reduce((a, b) => a + b, 0);
 
-    const [currStockPrice] = stockPrices;
-
     return {
-      price: currStockPrice.price,
-      timestamp: currStockPrice.timestamp,
-      movingAvarage: sumOfPrices / windowSize,
-      windowSize,
+      result: {
+        ...partialResult.result,
+        movingAvarage: sumOfPrices / windowSize,
+      },
     };
   }
 }
