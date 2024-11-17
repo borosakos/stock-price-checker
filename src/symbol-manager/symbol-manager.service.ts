@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Observed } from 'src/entities/observed.entity';
 import { Repository } from 'typeorm';
 import SymbolDto from './dto/SymbolDto';
+import { Observed } from './entities/observed.entity';
 
 @Injectable()
 export class SymbolManagerService {
@@ -21,11 +21,11 @@ export class SymbolManagerService {
     return { symbol: result.symbol };
   }
 
-  async get(): Promise<string> {
-    const observed = await this.observedRepository.findOne({
+  async get(): Promise<SymbolDto> {
+    const result = await this.observedRepository.findOne({
       where: { id: this.observedId },
     });
 
-    return observed?.symbol;
+    return { symbol: result?.symbol };
   }
 }
