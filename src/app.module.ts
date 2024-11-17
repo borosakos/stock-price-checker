@@ -9,6 +9,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { StockApiModule } from './stock-api/stock-api.module';
 import { PriceCheckerModule } from './price-checker/price-checker.module';
 import { SymbolManagerModule } from './symbol-manager/symbol-manager.module';
+import { SharedModule } from './shared/shared.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { SymbolManagerModule } from './symbol-manager/symbol-manager.module';
     StockApiModule,
     PriceCheckerModule,
     SymbolManagerModule,
+    SharedModule,
   ],
   controllers: [AppController],
   providers: [AppService],

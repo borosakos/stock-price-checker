@@ -1,7 +1,7 @@
 import { Controller, Param, Put } from '@nestjs/common';
 import { SymbolManagerService } from './symbol-manager.service';
 import SymbolValidationPipe from './pipes/symbolValidationPipe';
-import { UppercasePipe } from './pipes/uppercasePipe';
+import { UppercasePipe } from 'src/shared/pipes/uppercasePipe';
 
 @Controller('stock')
 export class SymbolManagerController {
