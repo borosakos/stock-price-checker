@@ -1,4 +1,4 @@
-import StockPriceDto from './dto/stockPriceDto';
+import StockPriceDto from './dto/stock-price-dto';
 
 export default abstract class StockApi {
   abstract fetchStockPrice(symbol: string): Promise<StockPriceDto>;

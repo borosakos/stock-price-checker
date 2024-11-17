@@ -1,5 +1,24 @@
 services:
-  postgres:
+  price-checker:
+    image: price-checker:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    environment:
+      DB_NAME: stocks
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_PASSWORD: postgres
+      DB_USERNAME: postgres
+      STOCK_API_KEY:
+    networks:
+      - app-network
+    depends_on:
+      - db
+
+  db:
     image: postgres:17-alpine
     ports:
       - 5433:5432

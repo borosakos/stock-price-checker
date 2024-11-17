@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import StockApi from './stock-api.service';
-import FinnhubQuoteResponseV1 from './dto/FinnhubQuoteResponseV1Dto';
-import StockPriceDto from './dto/stockPriceDto';
-import StockSymbolResponseV1Dto from './dto/FinnhubStockSymbolResponsev1Dto';
+import FinnhubQuoteResponseV1 from './dto/finnhub-quote-response-v1-dto';
+import StockPriceDto from './dto/stock-price-dto';
+import StockSymbolResponseV1Dto from './dto/finnhub-stock-symbol-response-v1-dto';
 
 @Injectable()
 export class FinnhubStockApiService implements StockApi {

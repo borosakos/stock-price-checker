@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StockPrice } from 'src/shared/entities/stock-price.entity';
 import { Repository } from 'typeorm';
-import MovingAverageResponseDto from './dto/MovingAverageResponseDto';
+import MovingAverageResponseDto from './dto/moving-average-response-dto';
 
 @Injectable()
 export class PriceCheckerService {
