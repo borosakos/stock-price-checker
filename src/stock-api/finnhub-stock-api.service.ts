@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import StockApi from './stock-api.service';
+import StockApi from './stock-api.interface';
 import FinnhubQuoteResponseV1 from './dto/FinnhubQuoteResponseV1Dto';
 import StockPriceDto from './dto/stockPriceDto';
 
@@ -25,7 +25,7 @@ export class FinnhubStockApiService implements StockApi {
         );
       return {
         price: data.c,
-        source: FinnhubStockApiService.source,
+        source: this.getSource(),
         symbol: symbol,
         timestamp: new Date(data.t * 1000),
       };
@@ -39,5 +39,9 @@ export class FinnhubStockApiService implements StockApi {
       }
       this.logger.error('Error in request', err.message);
     }
+  }
+
+  getSource(): string {
+    return FinnhubStockApiService.source;
   }
 }
