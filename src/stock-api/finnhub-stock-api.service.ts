@@ -14,40 +14,26 @@ export class FinnhubStockApiService implements StockApi {
   constructor(private readonly httpService: HttpService) {}
 
   async fetchStockPrice(symbol: string): Promise<StockPriceDto> {
-    try {
-      const { data } =
-        await this.httpService.axiosRef.get<FinnhubQuoteResponseV1>(
-          `https://finnhub.io/api/v1/quote?symbol=${symbol}`,
-          {
-            headers: {
-              'X-Finnhub-Token': process.env.STOCK_API_KEY,
-            },
-          },
-        );
-      return {
-        price: data.c,
-        source: this.getSource(),
-        symbol: symbol,
-        timestamp: new Date(data.t * 1000),
-      };
-    } catch (err) {
-      if (err.response) {
-        this.logger.error('Error from API call', {
-          data: err.response.data,
-          status: err.response.status,
-        });
-        return;
-      }
-      this.logger.error('Error in request', err.message);
-    }
+    const { c, t } = await this.queryApi<FinnhubQuoteResponseV1>(
+      `https://finnhub.io/api/v1/quote?symbol=${symbol}`,
+    );
+
+    return {
+      price: c,
+      source: this.getSource(),
+      symbol: symbol,
+      timestamp: new Date(t * 1000),
+    };
   }
 
   async isSymbolValid(symbol: string): Promise<boolean> {
-    const { result } = await this.fetchSymbolLookup(symbol);
+    const { result } = await this.queryApi<StockSymbolResponseV1Dto>(
+      `https://finnhub.io/api/v1/search?q=${symbol}`,
+    );
 
     const matchingSymbols = result
-      .map((res) => res.symbol.toUpperCase())
-      .filter((res) => symbol.toUpperCase() === res).length;
+      .map((res) => res.symbol.toLowerCase())
+      .filter((res) => symbol.toLowerCase() === res).length;
 
     this.logger.debug(
       `The queried symbol ${matchingSymbols > 0 ? 'exists' : 'not exists'} `,
@@ -56,23 +42,17 @@ export class FinnhubStockApiService implements StockApi {
     return matchingSymbols > 0;
   }
 
-  private async fetchSymbolLookup(
-    symbol: string,
-  ): Promise<StockSymbolResponseV1Dto> {
+  private async queryApi<T>(url: string): Promise<T> {
     try {
-      const { data } =
-        await this.httpService.axiosRef.get<StockSymbolResponseV1Dto>(
-          `https://finnhub.io/api/v1/search?q=${symbol}`,
-          {
-            headers: {
-              'X-Finnhub-Token': process.env.STOCK_API_KEY,
-            },
-          },
-        );
+      const { data } = await this.httpService.axiosRef.get<T>(url, {
+        headers: {
+          'X-Finnhub-Token': process.env.STOCK_API_KEY,
+        },
+      });
       return data;
     } catch (err) {
       if (err.response) {
-        this.logger.error('Error from API call', {
+        this.logger.error('Unknown error from API call', {
           data: err.response.data,
           status: err.response.status,
         });
@@ -80,7 +60,6 @@ export class FinnhubStockApiService implements StockApi {
         this.logger.error('Error in request', err.message);
       }
     }
-    return { count: 0, result: [] };
   }
 
   getSource(): string {
