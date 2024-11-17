@@ -1,7 +1,7 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { PriceCheckerService } from './price-checker.service';
 import MovingAverageResponseDto from './dto/moving-average-response-dto';
-import { UppercasePipe } from 'src/shared/pipes/uppercase-pipe';
+import { UppercasePipe } from '../shared/pipes/uppercase-pipe';
 import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('stock')

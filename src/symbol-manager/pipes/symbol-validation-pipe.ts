@@ -5,7 +5,7 @@ import {
   Injectable,
   PipeTransform,
 } from '@nestjs/common';
-import StockApi from 'src/stock-api/stock-api.service';
+import StockApi from '../../stock-api/stock-api.service';
 
 @Injectable()
 export default class SymbolValidationPipe

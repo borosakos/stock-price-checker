@@ -1,7 +1,7 @@
 import { Controller, Param, Put } from '@nestjs/common';
 import { SymbolManagerService } from './symbol-manager.service';
 import SymbolValidationPipe from './pipes/symbol-validation-pipe';
-import { UppercasePipe } from 'src/shared/pipes/uppercase-pipe';
+import { UppercasePipe } from '../shared/pipes/uppercase-pipe';
 import SymbolDto from './dto/symbol-dto';
 import { ApiResponse } from '@nestjs/swagger';
 
