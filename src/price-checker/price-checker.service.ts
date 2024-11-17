@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { StockPrice } from 'src/entities/stock-price.entity';
+import { StockPrice } from 'src/shared/entities/stock-price.entity';
 import { Repository } from 'typeorm';
 import MovingAverageResponseDto from './dto/MovingAverageResponseDto';
 

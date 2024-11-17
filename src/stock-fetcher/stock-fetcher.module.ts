@@ -3,7 +3,7 @@ import { StockFetcherService } from './stock-fetcher.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HttpModule } from '@nestjs/axios';
 import { StockApiModule } from 'src/stock-api/stock-api.module';
-import { StockPrice } from 'src/entities/stock-price.entity';
+import { StockPrice } from 'src/shared/entities/stock-price.entity';
 import { SymbolManagerModule } from 'src/symbol-manager/symbol-manager.module';
 
 @Module({
