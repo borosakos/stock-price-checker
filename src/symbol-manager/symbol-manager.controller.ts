@@ -1,6 +1,7 @@
 import { Controller, Param, Put } from '@nestjs/common';
 import { SymbolManagerService } from './symbol-manager.service';
 import SymbolValidationPipe from './pipes/symbolValidationPipe';
+import { UppercasePipe } from './pipes/uppercasePipe';
 
 @Controller('stock')
 export class SymbolManagerController {
@@ -8,7 +9,7 @@ export class SymbolManagerController {
 
   @Put(':symbol')
   async save(
-    @Param('symbol', SymbolValidationPipe) symbol: string,
+    @Param('symbol', UppercasePipe, SymbolValidationPipe) symbol: string,
   ): Promise<void> {
     return this.symbolManagerService.save(symbol);
   }
