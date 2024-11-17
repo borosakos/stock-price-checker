@@ -5,6 +5,15 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+class ColumnNumericTransformer {
+  to(data: number): number {
+    return data;
+  }
+  from(data: string): number {
+    return parseFloat(data);
+  }
+}
+
 @Entity()
 export class StockPrice {
   @PrimaryGeneratedColumn()
@@ -19,6 +28,7 @@ export class StockPrice {
   @Column('numeric', {
     precision: 10,
     scale: 4,
+    transformer: new ColumnNumericTransformer(),
   })
   price: number;
 
