@@ -3,6 +3,7 @@ import { HttpService } from '@nestjs/axios';
 import StockApi from './stock-api.interface';
 import FinnhubQuoteResponseV1 from './dto/FinnhubQuoteResponseV1Dto';
 import StockPriceDto from './dto/stockPriceDto';
+import StockSymbolResponseV1Dto from './dto/FinnhubStockSymbolResponsev1Dto';
 
 @Injectable()
 export class FinnhubStockApiService implements StockApi {
@@ -39,6 +40,50 @@ export class FinnhubStockApiService implements StockApi {
       }
       this.logger.error('Error in request', err.message);
     }
+  }
+
+  async isSymbolValid(symbol: string): Promise<boolean> {
+    const { count, result } = await this.fetchSymbolLookup(symbol);
+
+    if (count === 0) {
+      return false;
+    }
+
+    const matchingSymbols = result
+      .map((res) => res.symbol.toUpperCase())
+      .filter((res) => symbol.toUpperCase() === res).length;
+
+    this.logger.debug(matchingSymbols);
+    this.logger.debug(matchingSymbols > 0);
+
+    return matchingSymbols > 0;
+  }
+
+  private async fetchSymbolLookup(
+    symbol: string,
+  ): Promise<StockSymbolResponseV1Dto> {
+    try {
+      const { data } =
+        await this.httpService.axiosRef.get<StockSymbolResponseV1Dto>(
+          `https://finnhub.io/api/v1/search?q=${symbol}`,
+          {
+            headers: {
+              'X-Finnhub-Token': process.env.STOCK_API_KEY,
+            },
+          },
+        );
+      return data;
+    } catch (err) {
+      if (err.response) {
+        this.logger.error('Error from API call', {
+          data: err.response.data,
+          status: err.response.status,
+        });
+      } else {
+        this.logger.error('Error in request', err.message);
+      }
+    }
+    return { count: 0, result: [] };
   }
 
   getSource(): string {
