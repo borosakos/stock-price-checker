@@ -1,4 +1,4 @@
-export default interface StockSymbolResponseV1Dto {
+export default class StockSymbolResponseV1Dto {
   count: number;
   result: Array<{
     description: string;
