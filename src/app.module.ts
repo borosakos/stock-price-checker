@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { StockApiModule } from './stock-api/stock-api.module';
 import { PriceCheckerModule } from './price-checker/price-checker.module';
+import { SymbolManagerModule } from './symbol-manager/symbol-manager.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { PriceCheckerModule } from './price-checker/price-checker.module';
     ScheduleModule.forRoot(),
     StockApiModule,
     PriceCheckerModule,
+    SymbolManagerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
