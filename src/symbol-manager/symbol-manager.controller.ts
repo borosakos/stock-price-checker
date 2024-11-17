@@ -1,29 +1,15 @@
-import {
-  BadRequestException,
-  Controller,
-  Inject,
-  Param,
-  Put,
-} from '@nestjs/common';
+import { Controller, Param, Put } from '@nestjs/common';
 import { SymbolManagerService } from './symbol-manager.service';
-import StockApi from 'src/stock-api/stock-api.interface';
+import SymbolValidationPipe from './pipes/symbolValidationPipe';
 
 @Controller('stock')
 export class SymbolManagerController {
-  constructor(
-    private readonly symbolManagerService: SymbolManagerService,
-    @Inject('FinnhubStockApiService')
-    private readonly apiFetcherService: StockApi,
-  ) {}
+  constructor(private readonly symbolManagerService: SymbolManagerService) {}
 
   @Put(':symbol')
-  async save(@Param('symbol') symbol: string): Promise<void> {
-    const isValid = await this.apiFetcherService.isSymbolValid(symbol);
-
-    if (!isValid) {
-      throw new BadRequestException('The provided symbol is not valid!');
-    }
-
+  async save(
+    @Param('symbol', SymbolValidationPipe) symbol: string,
+  ): Promise<void> {
     return this.symbolManagerService.save(symbol);
   }
 }

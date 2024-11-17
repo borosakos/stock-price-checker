@@ -43,18 +43,15 @@ export class FinnhubStockApiService implements StockApi {
   }
 
   async isSymbolValid(symbol: string): Promise<boolean> {
-    const { count, result } = await this.fetchSymbolLookup(symbol);
-
-    if (count === 0) {
-      return false;
-    }
+    const { result } = await this.fetchSymbolLookup(symbol);
 
     const matchingSymbols = result
       .map((res) => res.symbol.toUpperCase())
       .filter((res) => symbol.toUpperCase() === res).length;
 
-    this.logger.debug(matchingSymbols);
-    this.logger.debug(matchingSymbols > 0);
+    this.logger.debug(
+      `The queried symbol ${matchingSymbols > 0 ? 'exists' : 'not exists'} `,
+    );
 
     return matchingSymbols > 0;
   }
