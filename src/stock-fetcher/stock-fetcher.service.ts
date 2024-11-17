@@ -2,7 +2,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StockPrice } from 'src/entities/stock-price.entity';
-import StockApi from 'src/stock-api/stock-api.interface';
+import StockApi from 'src/stock-api/stock-api.service';
 import { SymbolManagerService } from 'src/symbol-manager/symbol-manager.service';
 import { Repository } from 'typeorm';
 
@@ -13,7 +13,7 @@ export class StockFetcherService {
   constructor(
     @InjectRepository(StockPrice)
     private readonly stockPriceRepository: Repository<StockPrice>,
-    @Inject('FinnhubStockApiService')
+    @Inject(StockApi)
     private readonly apiFetcherService: StockApi,
     @Inject(SymbolManagerService)
     private readonly symbolManagerService: SymbolManagerService,

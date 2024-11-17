@@ -5,14 +5,14 @@ import {
   Injectable,
   PipeTransform,
 } from '@nestjs/common';
-import StockApi from 'src/stock-api/stock-api.interface';
+import StockApi from 'src/stock-api/stock-api.service';
 
 @Injectable()
 export default class SymbolValidationPipe
   implements PipeTransform<string, Promise<string>>
 {
   constructor(
-    @Inject('FinnhubStockApiService')
+    @Inject(StockApi)
     private readonly apiFetcherService: StockApi,
   ) {}
 
