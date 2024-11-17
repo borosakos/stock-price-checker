@@ -1,6 +1,7 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { PriceCheckerService } from './price-checker.service';
 import MovingAverageResponseDto from './dto/MovingAverageResponseDto';
+import { UppercasePipe } from 'src/shared/pipes/uppercasePipe';
 
 @Controller('stock')
 export class PriceCheckerController {
@@ -8,7 +9,7 @@ export class PriceCheckerController {
 
   @Get(':symbol')
   async readMovingAvarageWithStats(
-    @Param('symbol') symbol: string,
+    @Param('symbol', UppercasePipe) symbol: string,
   ): Promise<MovingAverageResponseDto> {
     return this.priceCheckerService.readMovingAverageWithStats(symbol);
   }
