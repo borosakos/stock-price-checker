@@ -24,6 +24,6 @@ export class SymbolManagerService {
       where: { id: this.observedId },
     });
 
-    return observed.symbol;
+    return observed?.symbol;
   }
 }

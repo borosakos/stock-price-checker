@@ -17,12 +17,10 @@ export class PriceCheckerService {
   ): Promise<MovingAverageResponseDto> {
     const stockPrices = await this.stockPriceRepository.find({
       select: ['price', 'timestamp'],
-      where: { symbol }, // TODO: Add source
+      where: { symbol },
       order: { timestamp: 'DESC' },
       take: windowSize,
     });
-
-    // TODO: Validate timestamp
 
     if (stockPrices.length < windowSize) {
       console.log(

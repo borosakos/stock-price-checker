@@ -9,5 +9,6 @@ export default (): PostgresConnectionOptions => ({
   username: process.env.DB_USERNAME,
   entities: [path.resolve(__dirname, '..') + '/**/*.entity{.ts,.js}'],
 
+  dropSchema: true,
   synchronize: true,
 });
