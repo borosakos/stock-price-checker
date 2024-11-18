@@ -4,6 +4,8 @@ import StockApi from './stock-api.service';
 import FinnhubQuoteResponseV1 from './dto/finnhub-quote-response-v1-dto';
 import StockPriceDto from './dto/stock-price-dto';
 import StockSymbolResponseV1Dto from './dto/finnhub-stock-symbol-response-v1-dto';
+import ApiError from './dto/api-error-dto';
+import axios from 'axios';
 
 @Injectable()
 export class FinnhubStockApiService implements StockApi {
@@ -13,25 +15,36 @@ export class FinnhubStockApiService implements StockApi {
 
   constructor(private readonly httpService: HttpService) {}
 
-  async fetchStockPrice(symbol: string): Promise<StockPriceDto> {
-    const { c, t } = await this.queryApi<FinnhubQuoteResponseV1>(
+  async fetchStockPrice(symbol: string): Promise<[StockPriceDto, ApiError]> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [quote, error] = await this.queryApi<FinnhubQuoteResponseV1>(
       `https://finnhub.io/api/v1/quote?symbol=${symbol}`,
     );
 
-    return {
-      price: c,
+    if (error) {
+      return [null, error];
+    }
+
+    const stockPrice = {
+      price: quote.c,
       source: this.getSource(),
       symbol: symbol,
-      timestamp: new Date(t * 1000),
+      timestamp: new Date(quote.t * 1000),
     };
+
+    return [stockPrice, null];
   }
 
-  async isSymbolValid(symbol: string): Promise<boolean> {
-    const { result } = await this.queryApi<StockSymbolResponseV1Dto>(
+  async isSymbolValid(symbol: string): Promise<[boolean, ApiError]> {
+    const [data, error] = await this.queryApi<StockSymbolResponseV1Dto>(
       `https://finnhub.io/api/v1/search?q=${symbol}`,
     );
 
-    const matchingSymbols = result
+    if (error) {
+      return [null, error];
+    }
+
+    const matchingSymbols = data.result
       .map((res) => res.symbol.toLowerCase())
       .filter((res) => symbol.toLowerCase() === res).length;
 
@@ -39,26 +52,34 @@ export class FinnhubStockApiService implements StockApi {
       `The queried symbol ${matchingSymbols > 0 ? 'exists' : 'not exists'} `,
     );
 
-    return matchingSymbols > 0;
+    return [matchingSymbols > 0, null];
   }
 
-  private async queryApi<T>(url: string): Promise<T> {
+  private async queryApi<T>(url: string): Promise<[T, ApiError]> {
     try {
       const { data } = await this.httpService.axiosRef.get<T>(url, {
         headers: {
           'X-Finnhub-Token': process.env.STOCK_API_KEY,
         },
       });
-      return data;
+      return [data, null];
     } catch (err) {
-      if (err.response) {
-        this.logger.error('Unknown error from API call', {
-          data: err.response.data,
-          status: err.response.status,
-        });
-      } else {
-        this.logger.error('Error in request', err.message);
+      if (axios.isAxiosError(err)) {
+        if (err.response) {
+          const error: ApiError = {
+            errorMsg: err.response.data,
+            status: err.response.status,
+          };
+          this.logger.error('Error from API call', error);
+          return [null, error];
+        }
       }
+      this.logger.error('Unknown error during API call');
+      const error: ApiError = {
+        errorMsg: 'Internal server error',
+        status: 500,
+      };
+      return [null, error];
     }
   }
 

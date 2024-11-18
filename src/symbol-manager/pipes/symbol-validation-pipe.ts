@@ -3,6 +3,7 @@ import {
   BadRequestException,
   Inject,
   Injectable,
+  InternalServerErrorException,
   PipeTransform,
 } from '@nestjs/common';
 import StockApi from '../../stock-api/stock-api.service';
@@ -18,7 +19,11 @@ export default class SymbolValidationPipe
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async transform(value: string, metadata: ArgumentMetadata): Promise<string> {
-    const isValid = await this.apiFetcherService.isSymbolValid(value);
+    const [isValid, error] = await this.apiFetcherService.isSymbolValid(value);
+
+    if (error) {
+      throw new InternalServerErrorException();
+    }
 
     if (!isValid) {
       throw new BadRequestException('The provided symbol is not valid!');

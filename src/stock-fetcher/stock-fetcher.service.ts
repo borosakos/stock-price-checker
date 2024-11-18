@@ -19,18 +19,23 @@ export class StockFetcherService {
     private readonly symbolManagerService: SymbolManagerService,
   ) {}
 
-  @Cron(CronExpression.EVERY_MINUTE)
+  @Cron(CronExpression.EVERY_5_SECONDS)
   async runPeriodically() {
-    const { symbol: observedSymbol } = await this.symbolManagerService.get();
+    const { symbol } = await this.symbolManagerService.get();
 
-    if (!observedSymbol) {
+    if (!symbol) {
       return;
     }
 
-    const stockPriceDto =
-      await this.apiFetcherService.fetchStockPrice(observedSymbol);
+    const [stockPriceDto, error] =
+      await this.apiFetcherService.fetchStockPrice(symbol);
 
-    if (!stockPriceDto) {
+    if (error) {
+      this.logger.error(
+        'Cannot fetch stock price data, clearing all of the previous information!',
+        error,
+      );
+      await this.stockPriceRepository.clear();
       return;
     }
 
