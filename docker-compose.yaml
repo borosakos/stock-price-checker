@@ -12,7 +12,7 @@ services:
       DB_PORT: 5432
       DB_PASSWORD: postgres
       DB_USERNAME: postgres
-      STOCK_API_KEY:
+      STOCK_API_KEY: <put your Finnhub API key here>
     networks:
       - app-network
     depends_on:
