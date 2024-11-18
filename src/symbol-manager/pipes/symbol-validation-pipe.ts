@@ -14,12 +14,12 @@ export default class SymbolValidationPipe
 {
   constructor(
     @Inject(StockApi)
-    private readonly apiFetcherService: StockApi,
+    private readonly stockApiService: StockApi,
   ) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async transform(value: string, metadata: ArgumentMetadata): Promise<string> {
-    const [isValid, error] = await this.apiFetcherService.isSymbolValid(value);
+    const [isValid, error] = await this.stockApiService.isSymbolValid(value);
 
     if (error) {
       throw new InternalServerErrorException();

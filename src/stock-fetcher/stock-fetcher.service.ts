@@ -14,7 +14,7 @@ export class StockFetcherService {
     @InjectRepository(StockPrice)
     private readonly stockPriceRepository: Repository<StockPrice>,
     @Inject(StockApi)
-    private readonly apiFetcherService: StockApi,
+    private readonly stockApiService: StockApi,
     @Inject(SymbolManagerService)
     private readonly symbolManagerService: SymbolManagerService,
   ) {}
@@ -36,7 +36,7 @@ export class StockFetcherService {
     }
 
     const [stockPriceDto, error] =
-      await this.apiFetcherService.fetchStockPrice(symbol);
+      await this.stockApiService.fetchStockPrice(symbol);
 
     if (error) {
       this.logger.error(
