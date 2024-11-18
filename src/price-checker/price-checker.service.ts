@@ -53,7 +53,7 @@ export class PriceCheckerService {
     return {
       result: {
         ...partialResult.result,
-        movingAvarage: sumOfPrices / windowSize,
+        movingAvarage: +(sumOfPrices / windowSize).toFixed(4),
       },
     };
   }
