@@ -27,12 +27,21 @@ export class StockFetcherService {
       return;
     }
 
+    const symbolExists = await this.stockPriceRepository.findOne({
+      where: { symbol },
+    });
+
+    if (!symbolExists) {
+      await this.stockPriceRepository.clear();
+    }
+
     const [stockPriceDto, error] =
       await this.apiFetcherService.fetchStockPrice(symbol);
 
     if (error) {
       this.logger.error(
-        'Cannot fetch stock price data, clearing all of the previous information!',
+        'Cannot fetch stock price data, clearing all of the' +
+          'previous information in order to keep sampling rate consistent!',
         error,
       );
       await this.stockPriceRepository.clear();
