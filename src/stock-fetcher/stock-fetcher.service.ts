@@ -19,7 +19,7 @@ export class StockFetcherService {
     private readonly symbolManagerService: SymbolManagerService,
   ) {}
 
-  @Cron(CronExpression.EVERY_5_SECONDS)
+  @Cron(CronExpression.EVERY_MINUTE)
   async runPeriodically() {
     const { symbol } = await this.symbolManagerService.get();
 
